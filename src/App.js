@@ -1,24 +1,78 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
+import HomePage from "./components/HomePage";
+import WalletConnection from "./components/WalletConnection";
+import VoterRegistration from "./components/VoterRegistration";
+import VoterLogin from "./components/VoterLogin";
+import CandidateRegistration from "./components/CandidateRegistration";
 
 function App() {
+  const [account, setAccount] = useState(null);
+
+  useEffect(() => {
+    // Check wallet connection when the app starts
+    checkWalletConnection();
+  }, []);
+
+  const checkWalletConnection = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        // Check if the wallet is connected
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+        }
+      } catch (error) {
+        console.error("Wallet connection error:", error);
+      }
+    }
+  };
+
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        // Request account access from the user
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+        }
+      } catch (error) {
+        console.error("Wallet connection error:", error);
+      }
+    } else {
+      console.error("Metamask not detected");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={account ? <Navigate to="/home" /> : <WalletConnection connectWallet={connectWallet} account={account} />}
+        />
+        <Route
+          path="/home"
+          element={<HomePage account={account} />}
+        />
+        <Route
+          path="/voter-registration"
+          element={<VoterRegistration account={account} />}
+        />
+        <Route
+          path="/voter-login"
+          element={<VoterLogin account={account} />}
+        />
+        <Route
+          path="/candidate-registration"
+          element={<CandidateRegistration account={account} />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
