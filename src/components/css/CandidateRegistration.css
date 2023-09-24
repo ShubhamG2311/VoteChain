@@ -1,0 +1,79 @@
+.header-part {
+    width: 100%;
+    background-color: #010a10;
+    box-shadow: 0 0 100px RGBa(0, 0, 0, 0.5);
+    border-radius: 3px;
+  
+  }
+  
+  
+  .tab-button:hover {
+    background-color: rgba(16, 93, 202, 0.626); /* Specify the color you want on hover */
+  
+  }
+  .tab-button {
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: white;
+    height: 80px;
+    padding: 20px 40px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    
+  }
+  .candidate-registration {
+    top: 0;
+    bottom: 0;
+    left: 251px;
+    /* padding: 20px; */
+    /* border-radius: 5px; */
+    text-align: center;
+  }
+  .voter-registration {
+    top: 0;
+    bottom: 0;
+    left: 251px;
+    /* padding: 20px; */
+    /* border-radius: 5px; */
+    text-align: center;
+  }
+  label {
+    display: inline-block;
+    width: 200px;
+    text-align: right;
+    padding-right: 40px;
+  }
+  .form-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .form-row {
+  
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .form-group {
+    
+    display: inline-flex;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  
+  input {
+    width: 400px;
+    height: 30px;
+    box-shadow: 0 0 100px RGBa(0, 0, 0, 0.1);
+      border-radius: 3px;
+  }
+  
+  
+  .formadjust-btn {
+    font-size: 16px;
+  }
