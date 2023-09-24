@@ -93,7 +93,7 @@ function VoterLogin({ account }) {
         <button className="tab-button">Home</button>
         <button className="tab-button">About Us</button>
       </div>
-      <h2>Voter Login</h2>
+      <h1>Voter Login</h1>
         <div class="formadjust">
           <form onSubmit={loginVoter} className="form-container">
           <div className="form-row">

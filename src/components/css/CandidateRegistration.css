@@ -29,7 +29,7 @@
     left: 251px;
     /* padding: 20px; */
     /* border-radius: 5px; */
-    text-align: center;
+    text-align: left;
   }
   .voter-registration {
     top: 0;
@@ -37,7 +37,7 @@
     left: 251px;
     /* padding: 20px; */
     /* border-radius: 5px; */
-    text-align: center;
+    text-align: left;
   }
   label {
     display: inline-block;
@@ -76,4 +76,8 @@
   
   .formadjust-btn {
     font-size: 16px;
+  }
+
+  h1 {
+    text-align: center;
   }

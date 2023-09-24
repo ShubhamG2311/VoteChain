@@ -39,6 +39,7 @@ body {
     top: 0;
     bottom: 0;
     left: 251px;
+    text-align: left; 
 }
 
 .container-heading h2 {
