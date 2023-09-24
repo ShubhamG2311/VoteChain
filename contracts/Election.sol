@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.0;
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 // Define a smart contract for managing elections
 contract Election {
+    using SafeMath for uint256;
+
     address public owner;
     bool public isVotingOpen;
 
@@ -21,13 +24,13 @@ contract Election {
     }
 
     struct Voter {
-        uint256 id;
         address ethereumAddress;
         string name;
         string email;
         string mobileNumber;
         string voterId;
         string ipfsImageHash;
+        bytes32 passwordHash;
         bool isRegistered;
     }
 
@@ -39,6 +42,8 @@ contract Election {
     }
 
     Candidate[] public candidates;
+    mapping(address => bool) public candidatesRegistered;
+
     mapping(address => bool) public hasVoted;
     mapping(address => uint256) public userVote;
 
@@ -62,9 +67,8 @@ contract Election {
     ); 
 
     event VoterRegistered(
-        uint256 id,
-        address indexed voterAddress,
         string name,
+        address voterAddress,
         string email,
         string mobileNumber,
         string voterId,
@@ -124,7 +128,8 @@ contract Election {
         string memory _voterId,
         string memory _homeAddress,
         string memory _ipfsImageHash
-    ) public onlyOwner votingClose {
+    ) public  votingClose {
+        require(!candidatesRegistered[_ethereumAddress], "Voter is already registered.");
         uint256 candidateId = candidates.length + 1;
         candidates.push(
             Candidate(
@@ -141,6 +146,7 @@ contract Election {
                 _ipfsImageHash
             )
         ); // Store additional candidate info
+        candidatesRegistered[_ethereumAddress]=true;
         emit NewCandidate(
             candidateId,
             _name,
@@ -153,32 +159,39 @@ contract Election {
             _homeAddress,
             _ipfsImageHash
         ); // Include additional info in the event
+
+        
     }
 
+    // Function to register a voter with a hashed password
     function registerVoter(
-        uint256 _id,
         string memory _name,
+        address _ethereumAddress,
         string memory _email,
         string memory _mobileNumber,
         string memory _voterId,
-        string memory _ipfsImageHash
+        string memory _ipfsImageHash,
+        string memory _password // Accept the plain password
     ) public {
-        require(!voters[msg.sender].isRegistered, "Voter is already registered.");
-        voters[msg.sender] = Voter({
-            id: _id,
-            ethereumAddress: msg.sender,
-            name: _name,
-            email: _email,
-            mobileNumber: _mobileNumber,
-            voterId: _voterId,
-            ipfsImageHash: _ipfsImageHash,
-            isRegistered: true
-        });
-        registeredVoters.push(msg.sender);
-        emit VoterRegistered(
-            _id,
-            msg.sender,
+        require(!voters[_ethereumAddress].isRegistered, "Voter is already registered.");
+
+        // Hash the provided password using a hashing function (e.g., keccak256)
+        bytes32 passwordHash = hashPassword(_password);
+
+        voters[_ethereumAddress] = Voter(
+            _ethereumAddress,
             _name,
+            _email,
+            _mobileNumber,
+            _voterId,
+            _ipfsImageHash,
+            passwordHash, // Store the hashed password
+            true
+        );
+        registeredVoters.push(_ethereumAddress);
+        emit VoterRegistered(
+            _name,
+            _ethereumAddress,
             _email,
             _mobileNumber,
             _voterId,
@@ -186,23 +199,40 @@ contract Election {
         );
     }
 
-    function isVoterRegistered() public view returns (bool) {
-        return voters[msg.sender].isRegistered;
+    // Function to hash a password using keccak256 or another suitable hashing function
+    function hashPassword(string memory _password) internal pure returns (bytes32) {
+        bytes32 passwordHash = keccak256(abi.encodePacked(_password));
+        return passwordHash;
     }
 
-    function loginVoter() public {
-        require(voters[msg.sender].isRegistered, "Voter is not registered.");
-        emit VoterLoggedIn(msg.sender);
+    function isVoterRegistered(address _ethereumAddress) public view returns (bool) {
+        return voters[_ethereumAddress].isRegistered;
     }
 
-    function vote(uint256 _candidateId) public votingOpen {
-        require(!hasVoted[msg.sender], "You have already voted.");
+
+    // Function to log in a voter with a password check
+    function loginVoter(string memory _email, string memory _password, address _ethereumAddress) public {
+        require(voters[_ethereumAddress].isRegistered, "Voter is not registered.");
+
+        Voter memory voter = voters[_ethereumAddress];
+
+        // Hash the provided password and compare it to the stored password hash
+        require(
+            (keccak256(abi.encodePacked(_password)) == voter.passwordHash) && (keccak256(abi.encodePacked(_email)) == keccak256(abi.encodePacked(voter.email))),
+            "Incorrect password"
+        );
+
+        emit VoterLoggedIn(_ethereumAddress);
+    }
+
+    function vote(uint256 _candidateId, address _ethereumAddress) public votingOpen {
+        require(!hasVoted[_ethereumAddress], "You have already voted.");
         require(_candidateId > 0 && _candidateId <= candidates.length, "Invalid candidate ID.");
         
-        hasVoted[msg.sender] = true;
-        userVote[msg.sender] = _candidateId;
+        hasVoted[_ethereumAddress] = true;
+        userVote[_ethereumAddress] = _candidateId;
         candidates[_candidateId - 1].voteCount++;
-        emit Voted(msg.sender, _candidateId);
+        emit Voted(_ethereumAddress, _candidateId);
     }
 
     function openElection() public onlyOwner {

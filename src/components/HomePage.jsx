@@ -3,27 +3,32 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function HomePage({ account }) {
+function HomePage({ account, electionContract }) {
   return (
     <div>
       <h2>Welcome to Online Voting System</h2>
       {account ? (
         <div>
-          <h3>Options:</h3>
-          <ul>
-            <li>
-              <Link to="/voter-registration">Voter Registration</Link>
-            </li>
-            <li>
-              <Link to="/voter-login">Voter Login</Link>
-            </li>
-            <li>
-              <Link to="/candidate-registration">Candidate Registration</Link>
-            </li>
-          </ul>
+          <h3>Home Page</h3>
+          <Link to="/voter-registration">
+            <button className="option-button">Voter Registration</button>
+          </Link>
+          <br/>
+          <Link to="/voter-login">
+            <button className="option-button">Voter Login</button>
+          </Link>
+          <br/>
+          <Link to="/candidate-registration">
+            <button className="option-button" >Candidate Registration</button>
+          </Link>
         </div>
       ) : (
-        <p>Please connect your wallet to access the options.</p>
+        <div>
+          <p>Please connect your wallet to access the options.</p>
+          <Link to="/">
+              <button>Connect Wallet</button>
+          </Link>
+        </div>
       )}
     </div>
   );

@@ -1,5 +1,3 @@
-// src/App.js
-
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
 import HomePage from "./components/HomePage";
@@ -7,8 +5,13 @@ import WalletConnection from "./components/WalletConnection";
 import VoterRegistration from "./components/VoterRegistration";
 import VoterLogin from "./components/VoterLogin";
 import CandidateRegistration from "./components/CandidateRegistration";
+import VoterDashboard from "./components/VoterDashboard";
+import electionContract from "./abis/Election.json" // Import the JSON file
+
+const ethers = require("ethers");
 
 function App() {
+  
   const [account, setAccount] = useState(null);
 
   useEffect(() => {
@@ -69,7 +72,11 @@ function App() {
         />
         <Route
           path="/candidate-registration"
-          element={<CandidateRegistration account={account} />}
+          element={<CandidateRegistration account={account}/>} // Pass the ABI as a prop
+        />
+        <Route
+          path="/voter-dashboard"
+          element={<VoterDashboard account={account}/>} // Pass the ABI as a prop
         />
       </Routes>
     </BrowserRouter>
