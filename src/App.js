@@ -7,12 +7,15 @@ import VoterLogin from "./components/VoterLogin";
 import CandidateRegistration from "./components/CandidateRegistration";
 import VoterDashboard from "./components/VoterDashboard";
 import electionContract from "./abis/Election.json" // Import the JSON file
+import OwnerDashboard from "./components/OwnerDashboard";
+import OwnerLogin from "./components/OwnerLogin";
 
 const ethers = require("ethers");
 
 function App() {
   
   const [account, setAccount] = useState(null);
+  // const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     // Check wallet connection when the app starts
@@ -33,50 +36,41 @@ function App() {
     }
   };
 
-  const connectWallet = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      try {
-        // Request account access from the user
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const accounts = await window.ethereum.request({ method: "eth_accounts" });
-        if (accounts.length > 0) {
-          setAccount(accounts[0]);
-        }
-      } catch (error) {
-        console.error("Wallet connection error:", error);
-      }
-    } else {
-      console.error("Metamask not detected");
-    }
-  };
-
   return (
     <BrowserRouter>
       <Routes>
         <Route
           exact
           path="/"
-          element={account ? <Navigate to="/home" /> : <WalletConnection connectWallet={connectWallet} account={account} />}
+          element={account ? <Navigate to="/home" /> : <WalletConnection/>}
         />
         <Route
-          path="/home"
-          element={<HomePage account={account} />}
+          exact path="/home"
+          element={<HomePage/>}
         />
         <Route
-          path="/voter-registration"
-          element={<VoterRegistration account={account} />}
+          exact path="/voter-registration"
+          element={<VoterRegistration/>}
         />
         <Route
-          path="/voter-login"
-          element={<VoterLogin account={account} />}
+          exact path="/voter-login"
+          element={<VoterLogin/>}
         />
         <Route
-          path="/candidate-registration"
-          element={<CandidateRegistration account={account}/>} // Pass the ABI as a prop
+          exact path="/candidate-registration"
+          element={<CandidateRegistration/>} // Pass the ABI as a prop
         />
         <Route
-          path="/voter-dashboard"
-          element={<VoterDashboard account={account}/>} // Pass the ABI as a prop
+          exact path="/voter-dashboard"
+          element={<VoterDashboard/>} // Pass the ABI as a prop
+        />
+        <Route
+          exact path="/owner-login"
+          element={<OwnerLogin/>} // Pass the ABI as a prop
+        />
+        <Route
+          exact path="/owner-dashboard"
+          element={<OwnerDashboard/>} // Pass the ABI as a prop
         />
       </Routes>
     </BrowserRouter>

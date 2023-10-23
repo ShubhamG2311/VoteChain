@@ -8,6 +8,16 @@ contract Election {
 
     address public owner;
     bool public isVotingOpen;
+    bool public resultsDeclared;
+
+    struct Winner {
+        uint256 id;
+        string name;
+        uint256 voteCount;
+        address ethereumAddress; 
+    }
+
+    Winner public winner;
 
     struct Candidate {
         uint256 id;
@@ -84,6 +94,7 @@ contract Election {
     constructor() {
         owner = msg.sender;
         isVotingOpen = false;
+        resultsDeclared = false;
     }
 
     modifier onlyOwner() {
@@ -210,6 +221,7 @@ contract Election {
     }
 
 
+
     // Function to log in a voter with a password check
     function loginVoter(string memory _email, string memory _password, address _ethereumAddress) public {
         require(voters[_ethereumAddress].isRegistered, "Voter is not registered.");
@@ -249,40 +261,70 @@ contract Election {
         return candidates.length;
     }
 
-    function getCandidate(uint256 _candidateId) public view returns (string memory name, string memory email, string memory mobileNumber, uint256 dateOfBirth, string memory homeAddress) {
-        require(_candidateId > 0 && _candidateId <= candidates.length, "Invalid candidate ID.");
-        Candidate memory candidate = candidates[_candidateId - 1];
-        return (candidate.name, candidate.email, candidate.mobileNumber, candidate.dateOfBirth, candidate.homeAddress);
+    function checkHasVoted(address _voterEthAddress) public view returns (bool) {
+        return hasVoted[_voterEthAddress];
+    }   
+
+    function getOwner() public view returns (address tempOwner) {
+        return owner;
     }
 
-    function getWinner() public view returns (Candidate memory winner) {
+    function getIsVotingOpen() public view returns (bool) {
+        return isVotingOpen;
+    }
+
+    function getCandidate(uint256 _candidateId) public view returns (string memory name, string memory email, string memory mobileNumber, uint256 dateOfBirth, string memory homeAddress, uint256 candidateId) {
+        require(_candidateId > 0 && _candidateId <= candidates.length, "Invalid candidate ID.");
+        Candidate memory candidate = candidates[_candidateId - 1];
+        return (candidate.name, candidate.email, candidate.mobileNumber, candidate.dateOfBirth, candidate.homeAddress, _candidateId);
+    }
+
+    function getWinnerId() public view returns (uint256 id) {
         require(!isVotingOpen, "Election is still open.");
-        uint256 winningVoteCount = 0;
-        uint256 winningCandidateId;
-        for (uint256 i = 0; i < candidates.length; i++) {
-            if (candidates[i].voteCount > winningVoteCount) {
-                winningVoteCount = candidates[i].voteCount;
-                winningCandidateId = candidates[i].id;
-            }
-        }
-        winner = candidates[winningCandidateId - 1];
-        return winner;
+        return winner.id;
+    }
+    function getWinnerName() public view returns (string memory name) {
+        require(!isVotingOpen, "Election is still open.");
+        return winner.name;
+    }
+    function getWinnerVoteCount() public view returns (uint256 voteCount) {
+        require(!isVotingOpen, "Election is still open.");
+        return winner.voteCount;
+    }
+
+    function getResultsDeclared() public view returns (bool) {
+        return resultsDeclared;
     }
 
     function declareElectionResult() public onlyOwner {
         require(!isVotingOpen, "Cannot declare result while voting is open.");
+        require(candidates.length > 0, "No candidates to declare as the winner.");
 
         uint256 winningVoteCount = 0;
-        uint256 winningCandidateId;
-        for (uint256 i = 0; i < candidates.length; i++) {
-            if (candidates[i].voteCount > winningVoteCount) {
-                winningVoteCount = candidates[i].voteCount;
-                winningCandidateId = candidates[i].id;
+        uint256 winningCandidateId = 0;
+
+        resultsDeclared = true;
+         
+        for (uint256 i = 0; i < candidates.length;) {
+        if (candidates[i].voteCount >= winningVoteCount) {
+            winningVoteCount = candidates[i].voteCount;
+            winningCandidateId = i;
+            unchecked{
+                i++;
             }
         }
-        // Candidate memory winner = candidates[winningCandidateId - 1];
-        Candidate memory winner = getWinner();
+       
+        }
 
-        emit ElectionResultDeclared(winner.name, winner.voteCount);
+        if (winningCandidateId >= 0) {
+            string memory winnerName = candidates[winningCandidateId].name;
+            uint256 winnerVoteCount = candidates[winningCandidateId].voteCount;
+            address winnerAddress = candidates[winningCandidateId].ethereumAddress;
+
+            winner = Winner(winningCandidateId + 1, winnerName, winnerVoteCount, winnerAddress);
+
+            emit ElectionResultDeclared(winnerName, winnerVoteCount);
+        }
     }
+
 }

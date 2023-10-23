@@ -116,15 +116,18 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { Web3Provider } from 'ethers';
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import './css/CandidateRegistration.css'
 // import config from '../config.json'
 import electionContract from "../artifacts/contracts/Election.sol/Election.json"
+import contractAddress from "../contractAddress.json"
 
 const ethers=require('ethers');
 
 
 
-function CandidateRegistration({account}) {
+function CandidateRegistration({}) {
   const [name, setName] = useState("");
   const [ethAddress, setEthaddress] = useState("");
   const [email, setEmail] = useState("");
@@ -135,10 +138,21 @@ function CandidateRegistration({account}) {
   const [homeAddress, setHomeAddress] = useState("");
   const [ipfsImageHash, setIpfsImageHash] = useState("");
   const [numberOfCandidates, setNumberOfCandidates] = useState(0);
+  const [disable, setDisable] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const tempAccount = localStorage.getItem("email");
+    if (tempAccount !== null) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const registerCandidate = async (e) => {
 
     e.preventDefault();
+    setDisable(true);
 
     try {
       // Create a Web3Provider instance
@@ -153,7 +167,7 @@ function CandidateRegistration({account}) {
 
     const signer = await provider.getSigner();
 
-    const election = new ethers.Contract("0x5FbDB2315678afecb367f032d93F642f64180aa3", electionContract.abi, signer)
+    const election = new ethers.Contract(contractAddress.contractAddress, electionContract.abi, signer)
 
     
     try {
@@ -175,11 +189,15 @@ function CandidateRegistration({account}) {
     } catch (error) {
       console.log(error.reason);
     }
+    setDisable(false);
+
+    navigate('/home');
 
     
     }
     catch {
       console.log(e);
+      window.location.reload();
     }
     
     }
@@ -214,6 +232,8 @@ function CandidateRegistration({account}) {
         <button className="tab-button">About Us</button>
       </div>
       <h1>Candidate Registration</h1>
+      {!isLoggedIn ? (
+        <div>
         <div class="formadjust">
           <form onSubmit={registerCandidate} className="form-container">
             <div className="form-row">
@@ -253,10 +273,20 @@ function CandidateRegistration({account}) {
                 <label for="inputimagehash" class="form-label">IPFS Image Hash</label>
                 <input type="text" className="input-field" class="form-control" id='inputimagehash' placeholder="IPFS Image Hash" onChange={(e) => setIpfsImageHash(e.target.value)} required/>
               </div>
-              <button type="submit" className="btn btn-primary" onClick={registerCandidate} style={{ marginLeft: '-65px' }}>Register</button>
+              <button type="submit" className="btn btn-primary" onClick={registerCandidate} style={{ marginLeft: '-65px' }} disabled={disable}>Register</button>
               </div>
           </form> 
         </div>
+        </div>
+      ) : (
+        <div>
+        <p>You are already logged in. Please logout from Dashboard to register new candidate.</p>
+          <Link to="/voter-dashboard">
+            <button className="btn btn-primary">Connect Wallet</button>
+          </Link>
+        </div>
+      )}
+        
     </div>
   );
 }
