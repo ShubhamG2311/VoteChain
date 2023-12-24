@@ -11,4 +11,38 @@ The blockchain is an emerging, decentralized, and distributed technology that pr
 - Centralized Control
 - Cost and Efficiency
 
+# Features
+
+### Security
+- Ethereum Blockchain: Data stored on a secure, decentralized ledger, resistant to fraud and manipulation.
+- Smart Contract: Controls voting process and data storage on the blockchain.
+- Salt Hashing: Securely stores user passwords against data leaks.
+- Manh modifiers: Secure access control for different users.
+- 2-Factor Authentication (future): Facial recognition for stronger login security.
+
+### Accessibility
+- Metamask Wallet: Connects users to the Ethereum blockchain.
+- Browser-based: Accessible on any device with a web browser.
+- Multiple functionalities: Admin, voter, and candidate registration/login.
+- User-friendly interface: ReactJS framework for smooth interaction.
+
+### Voting Process
+- Voter registration: Register with personal details and verification.
+- Candidate registration: Register with details and voter ID validation.
+- Secure voting: Cast vote through the smart contract on the blockchain.
+- Results access: View election results once declared by the admin.
+
+### Admin Control
+- Open/close elections: Control election timeframe.
+- Declare results: Publish final election results.
+
+### Additional Features (working on)
+- Facial recognition: More secure login through facial verification.
+- Decentralized data storage: IPFS for storing large user data securely.
+
+# How to run project?
+
+
+# References and Research papers
+
 
