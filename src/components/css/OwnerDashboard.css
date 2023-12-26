@@ -1,0 +1,39 @@
+/* Style for the "Congratulations" message within OwnerDashboard */
+.ownerdash p.congratulations {
+    font-size: 20px;
+    color: #28a745;
+  }
+  
+  /* Style for the winner's details within OwnerDashboard */
+  .ownerdash p.winner-details {
+    font-weight: bold;
+    margin: 5px;
+  }
+  .action{
+    
+    display: flex;
+    justify-content: space-between;
+    margin-top: 70px;
+    margin-left: 400px;
+    margin-right: 300px;
+    
+    
+    
+  }
+
+  .rowcard {
+    
+    background-color: aliceblue;
+    height: 375px;
+    padding-top: 10px;
+    width: 400px;
+    color: #090000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 26px;
+    cursor: pointer;
+    margin: 10px;
+}
+.card-bodycard{
+  padding-top: 40px;
+}

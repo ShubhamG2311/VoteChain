@@ -7,6 +7,7 @@
     background-color: #010a10;
     box-shadow: 0 0 100px RGBa(0, 0, 0, 0.5);
     border-radius: 3px;
+    
   
 }
 
@@ -35,18 +36,18 @@ body {
 }
 
 
-.container {
+/* .container {
     top: 0;
     bottom: 0;
     left: 251px;
     text-align: left; 
-}
+} */
 
-.container-heading h2 {
+/* .container-heading h2 {
     color: #4e434137;
     text-align: center;
     font-size: 70px;
-}
+} */
 
 .button-container {
     display: flex;
@@ -57,11 +58,11 @@ body {
 }
 
 .row {
-    align-items: center;
+    
     background-color: aliceblue;
     height: 300px;
     padding-top: 10px;
-    width: 500px;
+    width: 350px;
     color: #090000;
     border: none;
     padding: 10px 20px;

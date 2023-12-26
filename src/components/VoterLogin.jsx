@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import contractAddress from "../contractAddress.json";
 import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
 
 import electionContract from "../artifacts/contracts/Election.sol/Election.json";
 const ethers = require('ethers');
@@ -74,11 +75,7 @@ function VoterLogin({}) {
 
   return (
     <div className="voter-login">
-      <div className="header-part">
-        <button className="tab-button">Intro</button>
-        <button className="tab-button">Home</button>
-        <button className="tab-button">About Us</button>
-      </div>
+      <Navbar/>
       <h1>Voter Login</h1>
       {account ? (
         <div>
@@ -86,7 +83,7 @@ function VoterLogin({}) {
           isLoggedIn ? ( // Check if isLoggedIn is true
             <div>
             <Link to="/voter-dashboard">
-              <button className="btn btn-primary">Dashboard</button>
+              <button className="btn btn-primary" style={{marginLeft: '46.5%', marginTop: '60px '}}>Dashboard</button>
             </Link>
             </div>
           ) : (

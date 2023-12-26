@@ -5,6 +5,7 @@ import electionContract from "../artifacts/contracts/Election.sol/Election.json"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import contractAddress from "../contractAddress.json"
+import Navbar from "./Navbar";
 
 const ethers=require('ethers');
 
@@ -21,6 +22,7 @@ function VoterRegistration() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginMessage, setLoginMessage] = useState("");
   const [account, setAccount] = useState(null);
+  const [otp, setOtp] = useState('');
 
   useEffect(() => {
     checkWalletConnection();
@@ -46,6 +48,27 @@ function VoterRegistration() {
     }
   };
 
+  function generateRandomOTP() {
+    const tempOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    setOtp(tempOtp);
+  }
+
+  const sendOtp = async (e) => {
+    const config = {
+      Host : "smtp.elasticemail.com",
+      Username : "ghelanishubham@gmail.com",
+      Password : "9A92C65313C69130D4071434C310DDBFF420",
+      Port : 2525,
+      To : email,
+      From : "ghelanishubham@gmail.com",
+      Subject : "Your OTP",
+      Body : `Your OTP is ${otp}`
+    }
+    if (window.Email) {
+      window.Email.send(config).then(console.log("Success in email sending."));
+    }
+  }
+
   const registerVoter = async (e) => {
 
       e.preventDefault();
@@ -63,15 +86,7 @@ function VoterRegistration() {
       }
 
       setDisable(true);
-
-      // Create a Web3Provider instance
-      // await window.ethereum.request({ method: "eth_requestAccounts" });
-      // const provider = new ethers;
       const provider = new ethers.BrowserProvider(window.ethereum);
-      // console.log(provider);
-
-      
-      // const election = new ethers.Contract(config[network.chainId].election.address, electionContract, provider);
       console.log(electionContract.abi);
 
       const signer = await provider.getSigner();
@@ -95,7 +110,11 @@ function VoterRegistration() {
 
       setDisable(false);
 
-      navigate('/voter-login');
+      generateRandomOTP();
+
+      sendOtp();
+
+      navigate(`/verify-otp`);
 
       console.log("Success");
       } catch (e) {
@@ -106,11 +125,7 @@ function VoterRegistration() {
   
   return (
     <div className="voter-registration">
-      <div className="header-part" >
-        <button className="tab-button">Intro</button>
-        <button className="tab-button">Home</button>
-        <button className="tab-button">About Us</button>
-      </div>
+      <Navbar/>
       <h1>Voter Registration</h1>
       {account ? (
         <div>
@@ -175,3 +190,4 @@ function VoterRegistration() {
 }
 
 export default VoterRegistration;
+

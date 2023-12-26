@@ -59,6 +59,7 @@ contract Election {
 
     mapping(address => Voter) public voters;
     address[] public registeredVoters;
+    mapping(address => string) ipfsHashStore;
 
     mapping(address => Admin) public admins;
     address[] public adminAccounts;
@@ -172,6 +173,14 @@ contract Election {
         ); // Include additional info in the event
 
         
+    }
+
+    function getIpfsHash(address _ethereumAddress) public view returns (string memory){
+        return ipfsHashStore[_ethereumAddress];
+    }
+
+    function setIpfsHash(address _ethereumAddress, string memory ipfsHashTemp) public {
+        ipfsHashStore[_ethereumAddress] = ipfsHashTemp;
     }
 
     // Function to register a voter with a hashed password

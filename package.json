@@ -4,12 +4,22 @@
   "private": true,
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.3",
+    "@pinata/sdk": "^2.1.0",
+    "@react-email/render": "^0.0.9",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "body-parser": "^1.20.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "ipfs-http-client": "^60.0.1",
+    "nodemailer": "^6.9.7",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
+    "react-webcam": "^7.2.0",
     "web-vitals": "^2.1.4",
     "web3": "^1.10.3"
   },
@@ -43,6 +53,15 @@
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.4.1",
     "hardhat": "^2.17.3",
     "hardhat-deploy": "^0.11.37",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "browser": {
+    "crypto": false,
+    "stream": false,
+    "http": false,
+    "zlib": false
+    
   }
 }

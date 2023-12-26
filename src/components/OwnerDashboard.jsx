@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import './css/CandidateRegistration.css';
+import './css/OwnerDashboard.css';
 import electionContract from '../artifacts/contracts/Election.sol/Election.json';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import contractAddress from '../contractAddress.json';
+import Navbar from "./Navbar";
 const ethers = require('ethers');
 
 function OwnerDashboard() {
@@ -169,37 +170,96 @@ function OwnerDashboard() {
   }, []);
 
   return (
-    <div>
-      <p>Owner Dashboard</p>
+    <div className='ownerdash'>
+      <Navbar methodUsed={handleLogout} isLogOut={true}/>
+      <h1>Owner Dashboard</h1>
       {account ? (
         <div>
           {isLoading ? (
           <p>Loading results...</p>
         ) : (
-          <div>
-            <button onClick={handleLogout}>Logout</button>
+          <div className='action'>
+            
+            
             {isVotingOpen ? (
-              <div>
-                <button onClick={closeVoting}>Close Voting</button>
+              <div className="button-containercard">
+                <div className="rowcard">
+                  <div className="col-sm-6 mb-3 mb-sm-0">
+                    <div className="cardcard">
+                      <div className="card-bodycard">
+                        <h3 className="card-title">Close Voting</h3>
+                        <p className="card-text">
+                          Voting started.
+                        </p>
+                      
+                        <button onClick={closeVoting} className='option-button btn btn-primary'>Close Voting</button>
+                      
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+             
             ) : (
-              <div>
-                <button onClick={openVoting}>Open Voting</button>
+              <div className="button-containercard" >
+                <div className="rowcard">
+                  <div className="col-sm-6 mb-3 mb-sm-0">
+                    <div className="cardcard">
+                      <div className="card-bodycard">
+                        <h3 className="card-title">Start Voting</h3>
+                        <p className="card-text">
+                          Voting is currently closed.
+                        </p>
+                      
+                        <button onClick={openVoting} className='option-button btn btn-primary'>Open Voting</button>
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              
             )}
-            <p>{votingStatus}</p>
             
             {!resultsDeclared ? (
-              <div>
-                <button onClick={declareResults}>Declare Results</button>
-                <p>Results are not yet declared</p>
+               <div className="button-containercard">
+                <div className="rowcard">
+                <div className="col-sm-6 mb-3 mb-sm-0">
+                  <div className="cardcard">
+                    <div className="card-bodycard">
+                      <h3 className="card-title">Declare Results</h3>
+                      <p className="card-text">
+                      Results are not yet declared
+                      </p>
+                      
+                      <button onClick={declareResults} className='option-button btn btn-primary'>Declare Results</button>
+                      
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+             
             ) : (
               <div>
-                <p>Congratulations to the winner.</p>
-                <p>Candidate Id: {winnerId}</p>
-                <p>Candidate Name: {winnerName}</p>
-                <p>Candidate Vote Count: {winnerVoteCount}</p>
+                <div class="modal fade" id="myModal" role="dialog" style={{ paddingTop: '10px' ,display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div class="modal-dialog">
+                        <div class="carddash" style={{textAlign: 'center' , padding: '1.25rem'}}>
+                            <div class="text-right cross"> <i class="fa fa-times"></i> </div>
+                            <div class="card-body text-center" > <img src="https://img.icons8.com/bubbles/200/000000/trophy.png"/>
+                                <h4>CONGRATULATIONS!</h4>
+                                <span style={{ fontWeight: 'bold' }}>Candidate Id:</span> {winnerId}
+                                <br />
+                                <span style={{ fontWeight: 'bold' }}>Candidate Name:</span> {winnerName}
+                                <br />
+                                <span style={{ fontWeight: 'bold' }}>Candidate Vote Count:</span> {winnerVoteCount}
+                                <br/>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
               </div>
             )}
           </div>

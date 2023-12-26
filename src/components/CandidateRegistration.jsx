@@ -1,5 +1,3 @@
-
-
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { Web3Provider } from 'ethers';
@@ -9,6 +7,7 @@ import './css/CandidateRegistration.css'
 // import config from '../config.json'
 import electionContract from "../artifacts/contracts/Election.sol/Election.json"
 import contractAddress from "../contractAddress.json"
+import Navbar from "./Navbar";
 
 const ethers=require('ethers');
 
@@ -27,8 +26,6 @@ function CandidateRegistration({}) {
   const [numberOfCandidates, setNumberOfCandidates] = useState(0);
   const [disable, setDisable] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginMessage, setLoginMessage] = useState('');
-  const [account, setAccount] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,19 +53,7 @@ function CandidateRegistration({}) {
 
     const signer = await provider.getSigner();
 
-    const election = new ethers.Contract(contractAddress.contractAddress, electionContract.abi, signer);
-
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-    const accounts = await window.ethereum.request({ method: "eth_accounts" });
-    console.log("Accounts are: ", accounts);
-
-    console.log(accounts[0]);
-    console.log(accounts[0].toLocaleLowerCase());
-    if (ethAddress.toLocaleLowerCase() !== accounts[0].toLocaleLowerCase()) {
-      console.log("Please check if the ethereum address is same as the account selected in Metamask or connect your wallet.")
-      setLoginMessage('Please check if the ethereum address is same as the account selected in Metamask or connect your wallet.');
-      return;
-    }
+    const election = new ethers.Contract(contractAddress.contractAddress, electionContract.abi, signer)
 
     
     try {
@@ -102,15 +87,32 @@ function CandidateRegistration({}) {
     }
     
     }
+    const getCount = async () => {
+
+      // Create a Web3Provider instance
+      // await window.ethereum.request({ method: "eth_requestAccounts" });
+      // const provider = new ethers;
+      // const provider = new ethers.BrowserProvider(window.ethereum);
+      // // console.log(provider);
+
+      // console.log(electionContract.abi);
+
+      // const signer = await provider.getSigner();
+
+      // const election = new ethers.Contract("0x5FbDB2315678afecb367f032d93F642f64180aa3", electionContract.abi, signer)
+
+  
+      // const candidatesCount = await election.getCandidatesCount();
+
+    
+      // console.log('Candidate registration successful! Total candidates registered: ${candidatesCount}');
+      // setNumberOfCandidates(candidatesCount);
+    }
 
   return (
     <div className="candidate-registration">
       
-      <div className="header-part" >
-        <button className="tab-button">Intro</button>
-        <button className="tab-button">Home</button>
-        <button className="tab-button">About Us</button>
-      </div>
+      <Navbar/>
       <h1>Candidate Registration</h1>
       {!isLoggedIn ? (
         <div>

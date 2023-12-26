@@ -3,6 +3,10 @@ import electionContract from '../artifacts/contracts/Election.sol/Election.json'
 import contractAddress from "../contractAddress.json"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
+import CandidateCard from "./CandidateCard";
+import './css/VoterDashboard.css'
+
 const ethers = require('ethers');
 
 function VoterDashboard() {
@@ -97,6 +101,7 @@ function VoterDashboard() {
     console.log(tempAddress);
     if (tempAccount !== null) {
       setIsLoggedIn(true);
+      localStorage.setItem('registrationCompleted', false);
     }
     if (tempAddress !== "") {
       handleHasVoted();
@@ -173,37 +178,29 @@ function VoterDashboard() {
 
   return (
     <div className="voter-dashboard">
+      <Navbar methodUsed={handleLogout} isLogOut={true}/>
       <h1>Voter Dashboard</h1>
-
+      
       {isLoggedIn ? (
         <div>
-        <button onClick={handleLogout}>Logout</button>
+        
 
         {isElectionOpen ? (
           <div>
             {hasVoted ? (
-              <div>
-                <p>You have already voted.</p>
+              <div style={{marginLeft: '44.4%', marginTop: '70px'}}>
+                <h3>You have already voted .</h3>
               </div>
             ) : (
               <div>
-                {candidates.map((candidate) => (
-              <div key={candidate[2]} className="candidate-card">
-                <div className="candidate-info">
-                  <h2>{candidate[0]}</h2>
-                  <p>Candidate Id: {candidate[2]}</p>
-                  <p>Email Address: {candidate[1]}</p>
-                  <p>Date of Birth: {candidate[4]}</p>
+                <h3>List of All Eligible candidates.</h3>
+                <div className="button-container">
+                    {candidates.map((candidate) => (
+                      <div key={candidate[2]} className="candidate-card">
+                        <CandidateCard candidate={candidate} handleVote={handleVote}/>
+                      </div>
+                    ))}
                 </div>
-                <div className="actions">
-                  {!voted ? (
-                    <button onClick={() => handleVote(candidate[2])}>Vote</button>
-                  ) : (
-                    <p>You have already voted</p>
-                  )}
-                </div>
-              </div>
-            ))}
               </div>
             )}
           </div>
@@ -211,14 +208,33 @@ function VoterDashboard() {
           <div>
             {resultsDeclared ? (
               <div>
-                <p>Congratulations to the winner.</p>
-                <p>Candidate Id: {winnerId}</p>
-                <p>Candidate Name: {winnerName}</p>
-                <p>Candidate Vote Count: {winnerVoteCount}</p>
+                {/* <p style={{ fontSize: '1.6em', textAlign: 'center' , paddingTop: '30px', color: 'Blue'}}>Congratulations to the winner.</p> */}
+                  <div class="modal fade" id="myModal" role="dialog" style={{ paddingTop: '10px' ,display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div class="modal-dialog">
+                        <div class="carddash" style={{textAlign: 'center' , padding: '1.25rem'}}>
+                            <div class="text-right cross"> <i class="fa fa-times"></i> </div>
+                            <div class="card-body text-center" > <img src="https://img.icons8.com/bubbles/200/000000/trophy.png"/>
+                                <h4>CONGRATULATIONS!</h4>
+                                <span style={{ fontWeight: 'bold' }}>Candidate Id:</span> {winnerId}
+                                <br />
+                                <span style={{ fontWeight: 'bold' }}>Candidate Name:</span> {winnerName}
+                                <br />
+                                <span style={{ fontWeight: 'bold' }}>Candidate Vote Count:</span> {winnerVoteCount}
+                                <br/>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            
               </div>
             ) : (
+              
               <div>
-                <p>Election is yet to start. Please check later.</p>
+                
+                <p style={{ fontSize: '1.5em', textAlign: 'center' , paddingTop: '30px'}}>Election is yet to start. Please check later.</p>
+
               </div>
             )}
           </div>

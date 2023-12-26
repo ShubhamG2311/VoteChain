@@ -8,7 +8,9 @@ import CandidateRegistration from "./components/CandidateRegistration";
 import VoterDashboard from "./components/VoterDashboard";
 import electionContract from "./abis/Election.json" // Import the JSON file
 import OwnerDashboard from "./components/OwnerDashboard";
+import VerifyOtp from "./components/VerifyOtp";
 import OwnerLogin from "./components/OwnerLogin";
+import ImageRegister from "./components/ImageRegister";
 
 const ethers = require("ethers");
 
@@ -71,6 +73,14 @@ function App() {
         <Route
           exact path="/owner-dashboard"
           element={<OwnerDashboard/>} // Pass the ABI as a prop
+        />
+        <Route
+          exact path="/verify-otp"
+          element={<VerifyOtp/>} // Pass the ABI as a prop
+        />
+        <Route
+          exact path="/image-register"
+          element={<ImageRegister/>} // Pass the ABI as a prop
         />
       </Routes>
     </BrowserRouter>
