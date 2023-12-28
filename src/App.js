@@ -11,6 +11,7 @@ import OwnerDashboard from "./components/OwnerDashboard";
 import VerifyOtp from "./components/VerifyOtp";
 import OwnerLogin from "./components/OwnerLogin";
 import ImageRegister from "./components/ImageRegister";
+import VerifyFace from "./components/VerifyFace";
 
 const ethers = require("ethers");
 
@@ -81,6 +82,10 @@ function App() {
         <Route
           exact path="/image-register"
           element={<ImageRegister/>} // Pass the ABI as a prop
+        />
+        <Route
+          exact path="/verify-face"
+          element={<VerifyFace/>} // Pass the ABI as a prop
         />
       </Routes>
     </BrowserRouter>

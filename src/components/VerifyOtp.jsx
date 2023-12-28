@@ -16,9 +16,11 @@ function VerifyOtp() {
   useEffect(() => {
     const t1 = localStorage.getItem('voterRegistrationDone');
     const t2 = localStorage.getItem('voterOtpVerified');
+    // const t3 = localStorage.getItem('voterOtp');
 
     setVoterRegistrationDone(t1);
     setVoterOtpVerified(t2);
+    // setOtp(t3);
   }, []); 
 
   const handleVerifyOtp = async () => {

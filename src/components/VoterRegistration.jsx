@@ -22,7 +22,8 @@ function VoterRegistration() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginMessage, setLoginMessage] = useState("");
   const [account, setAccount] = useState(null);
-  const [otp, setOtp] = useState('');
+  // const [otp, setOtp] = useState(0);
+  let otp=0;
 
   useEffect(() => {
     checkWalletConnection();
@@ -48,24 +49,33 @@ function VoterRegistration() {
     }
   };
 
-  function generateRandomOTP() {
-    const tempOtp = Math.floor(1000 + Math.random() * 9000).toString();
-    setOtp(tempOtp);
+  const generateRandomOTP = async (e) => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
   }
 
   const sendOtp = async (e) => {
+    // Generate the OTP here
+    let tempOtp = await generateRandomOTP();
+
+    otp = tempOtp;
+  
     const config = {
-      Host : "smtp.elasticemail.com",
-      Username : "ghelanishubham@gmail.com",
-      Password : "9A92C65313C69130D4071434C310DDBFF420",
-      Port : 2525,
-      To : email,
-      From : "ghelanishubham@gmail.com",
-      Subject : "Your OTP",
-      Body : `Your OTP is ${otp}`
-    }
+      Host: "smtp.elasticemail.com",
+      Username: "ghelanishubham@gmail.com",
+      Password: "9A92C65313C69130D4071434C310DDBFF420",
+      Port: 2525,
+      To: email,
+      From: "ghelanishubham@gmail.com",
+      Subject: "Your OTP",
+      Body: `Your OTP is ${tempOtp}`  // Use the generated OTP directly
+    };
+  
     if (window.Email) {
-      window.Email.send(config).then(console.log("Success in email sending."));
+      window.Email.send(config).then(() => {
+        localStorage.setItem("voterOtp",tempOtp);
+        console.log("Success in email sending.");
+        // Now you can use the OTP for further processing if needed
+      });
     }
   }
 
@@ -110,16 +120,22 @@ function VoterRegistration() {
 
       setDisable(false);
 
-      generateRandomOTP();
-
-      sendOtp();
-
-      navigate(`/verify-otp`);
+      try {
+        // ...
+        
+        // Generate and send OTP after the transaction is successful
+        // await generateRandomOTP();
+        sendOtp();
+        navigate('/verify-otp');
+        console.log("Success");
+      } catch (error) {
+        console.log(error);
+      }
 
       console.log("Success");
       } catch (e) {
-        console.log(e.reason);
-        window.location.reload();
+        console.log(e);
+        // window.location.reload();
       }
     }
   
@@ -190,4 +206,3 @@ function VoterRegistration() {
 }
 
 export default VoterRegistration;
-

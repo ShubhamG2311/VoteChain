@@ -6,7 +6,7 @@ import { Buffer } from 'buffer';
 import electionContract from "../artifacts/contracts/Election.sol/Election.json"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import contractAddress from "../contractAddress.json"
+import contractAddress from "../contractAddress.json";
 import Navbar from "./Navbar";
 const axios = require('axios');
 const ethers=require('ethers');
@@ -17,6 +17,8 @@ const pinataApiSecret = 'c35658b3a9886f4e72e3bdd3b242aab6d4e16d7a3bb76ddebeef10b
 function ImageRegister() {
     const webcamRef = useRef(null);
     const [imgSrc, setImgSrc] = useState(null);
+
+    const navigate = useNavigate();
     
     // @ts-ignore
     window.Buffer = Buffer;
@@ -53,9 +55,13 @@ function ImageRegister() {
 
             const election = new ethers.Contract(contractAddress.contractAddress, electionContract.abi, signer);
 
-            
+            const accounts = await window.ethereum.request({ method: "eth_accounts" });
 
-            console.log('Pinata Upload Response:', response.data.IpfsHash);
+            console.log(accounts[0]);
+
+            await election.setIpfsHash(accounts[0],response.data.IpfsHash);
+
+            navigate('/home');
 
             
         } catch (error) {
