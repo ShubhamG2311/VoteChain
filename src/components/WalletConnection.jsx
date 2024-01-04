@@ -32,9 +32,10 @@ function WalletConnection({}) {
   return (
     <div>
       {account ? (
-        
+        <div>
+        <Navbar/>
         <div >
-          <Navbar/>
+          
           <div style={{textAlign: 'center' , paddingTop: '70px'}}>
             <p >Wallet connected: {account}</p>
             <Link to="/home">
@@ -42,13 +43,17 @@ function WalletConnection({}) {
             </Link>
           </div>
         </div>
+        </div>
         
       ) : (
+        <div>
+        <Navbar/>
         <div class="initialbutton">
-          <Navbar/>
+          
           <button onClick={connectWallet} className="btn btn-primary">
             Connect Wallet
           </button>
+        </div>
         </div>
         
         

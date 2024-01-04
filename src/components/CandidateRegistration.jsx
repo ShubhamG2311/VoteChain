@@ -66,18 +66,19 @@ function CandidateRegistration({}) {
       dateOfBirth,
       aadharNumber,
       voterId,
-      homeAddress,
-      ipfsImageHash
+      homeAddress
     );
     
     await tx.wait();
+
     console.log("Success");
+    navigate('/candidate-image-register');
     } catch (error) {
-      console.log(error.reason);
+      console.log(error);
     }
     setDisable(false);
 
-    navigate('/home');
+    
 
     
     }
@@ -150,10 +151,6 @@ function CandidateRegistration({}) {
               <div class="form-group col-12">
                 <label for="inputAddress" class="form-label">Home Address</label>
                 <input type="text" className="input-field" class="form-control" id='inputAddress' placeholder="Enter Adress here." onChange={(e) => setHomeAddress(e.target.value)} required/>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputimagehash" class="form-label">IPFS Image Hash</label>
-                <input type="text" className="input-field" class="form-control" id='inputimagehash' placeholder="IPFS Image Hash" onChange={(e) => setIpfsImageHash(e.target.value)} required/>
               </div>
               <button type="submit" className="btn btn-primary" onClick={registerCandidate} style={{ marginLeft: '-65px' }} disabled={disable}>Register</button>
               </div>

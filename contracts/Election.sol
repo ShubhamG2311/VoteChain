@@ -30,7 +30,6 @@ contract Election {
         string aadharNumber;    // Aadhar Card Number of the candidate
         string voterId;    // Voter ID Number of the candidate
         string homeAddress;   //Home Address of the Candidate
-        string ipfsImageHash; // Store IPFS hash of candidate's image
     }
 
     struct Voter {
@@ -39,9 +38,7 @@ contract Election {
         string email;
         string mobileNumber;
         string voterId;
-        string ipfsImageHash;
         bytes32 passwordHash;
-        bool isRegistered;
     }
 
     struct Admin {
@@ -51,15 +48,38 @@ contract Election {
         bool isAdmin;
     }
 
+    struct IpfsHash {
+        string faceHash; 
+        string documentHash;
+    }
+
+    struct VoterRegistrationInfo {
+        bool profileFilled;
+        bool otpVerified; 
+        bool faceRegistered;
+        bool fullyRegistered;
+    }
+
+    struct CandidateRegistrationInfo {
+        bool profileFilled;
+        bool otpVerified; 
+        bool faceRegistered;
+        bool fullyRegistered;
+    }
+
     Candidate[] public candidates;
-    mapping(address => bool) public candidatesRegistered;
+    
 
     mapping(address => bool) public hasVoted;
     mapping(address => uint256) public userVote;
-
     mapping(address => Voter) public voters;
     address[] public registeredVoters;
-    mapping(address => string) ipfsHashStore;
+    mapping(address => IpfsHash) voterIpfsHash;
+    mapping(address => VoterRegistrationInfo) voterInfo;
+
+    mapping(address => bool) public candidatesRegistered;
+    mapping(address => IpfsHash) candidateIpfsHash;
+    mapping(address => CandidateRegistrationInfo) candidateInfo;
 
     mapping(address => Admin) public admins;
     address[] public adminAccounts;
@@ -73,8 +93,7 @@ contract Election {
         uint256 dateOfBirth,
         string aadharNumber,
         string voterId,
-        string homeAddress,
-        string ipfsImageHash
+        string homeAddress
     ); 
 
     event VoterRegistered(
@@ -82,8 +101,7 @@ contract Election {
         address voterAddress,
         string email,
         string mobileNumber,
-        string voterId,
-        string ipfsImageHash
+        string voterId
     );
 
     event VoterLoggedIn(address indexed voterAddress);
@@ -138,8 +156,7 @@ contract Election {
         uint256 _dateOfBirth,
         string memory _aadharNumber,
         string memory _voterId,
-        string memory _homeAddress,
-        string memory _ipfsImageHash
+        string memory _homeAddress
     ) public  votingClose {
         require(!candidatesRegistered[_ethereumAddress], "Voter is already registered.");
         uint256 candidateId = candidates.length + 1;
@@ -154,11 +171,11 @@ contract Election {
                 _dateOfBirth,
                 _aadharNumber,
                 _voterId,
-                _homeAddress,
-                _ipfsImageHash
+                _homeAddress
             )
         ); // Store additional candidate info
         candidatesRegistered[_ethereumAddress]=true;
+        candidateInfo[_ethereumAddress].profileFilled = true;
         emit NewCandidate(
             candidateId,
             _name,
@@ -168,19 +185,71 @@ contract Election {
             _dateOfBirth,
             _aadharNumber,
             _voterId,
-            _homeAddress,
-            _ipfsImageHash
+            _homeAddress
         ); // Include additional info in the event
 
         
     }
 
-    function getIpfsHash(address _ethereumAddress) public view returns (string memory){
-        return ipfsHashStore[_ethereumAddress];
+    function getVoterIpfsHash(address _ethereumAddress) public view returns (IpfsHash memory){
+        return voterIpfsHash[_ethereumAddress];
     }
 
-    function setIpfsHash(address _ethereumAddress, string memory ipfsHashTemp) public {
-        ipfsHashStore[_ethereumAddress] = ipfsHashTemp;
+    function setVoterIpfsHash(address _ethereumAddress, string memory _facialHash, string memory _documentHash) public {
+        
+        voterIpfsHash[_ethereumAddress] = IpfsHash(_facialHash,_documentHash);
+        voterInfo[_ethereumAddress].faceRegistered = true; 
+        voterInfo[_ethereumAddress].fullyRegistered = true;
+    }
+
+    function getVoterInfo(address _ethereumAddress) public view returns (VoterRegistrationInfo memory){
+        return voterInfo[_ethereumAddress];
+    }
+
+    function setVoterBasic(address _ethereumAddress) public {
+        
+        voterInfo[_ethereumAddress] = VoterRegistrationInfo(true,false,false,false);
+    }
+
+    function setVoterOtp(address _ethereumAddress) public {
+        
+        voterInfo[_ethereumAddress].otpVerified = true; 
+    }
+
+    function setVoterFace(address _ethereumAddress) public {
+        
+        voterInfo[_ethereumAddress].faceRegistered = true; 
+        voterInfo[_ethereumAddress].fullyRegistered = true;
+    }
+
+    function getCandidateIpfsHash(address _ethereumAddress) public view returns (IpfsHash memory){
+        return candidateIpfsHash[_ethereumAddress];
+    }
+
+    function setCandidateIpfsHash(address _ethereumAddress, string memory _facialHash, string memory _documentHash) public {
+        candidateInfo[_ethereumAddress].faceRegistered = true;
+        candidateInfo[_ethereumAddress].fullyRegistered = true;
+        candidateIpfsHash[_ethereumAddress] = IpfsHash(_facialHash,_documentHash);
+    }
+
+    function getCandidateInfo(address _ethereumAddress) public view returns (CandidateRegistrationInfo memory){
+        return candidateInfo[_ethereumAddress];
+    }
+
+    function setCandidateBasic(address _ethereumAddress) public {
+        
+        candidateInfo[_ethereumAddress] = CandidateRegistrationInfo(true,false,false,false);
+    }
+
+    function setCandidateOtp(address _ethereumAddress) public {
+        
+        candidateInfo[_ethereumAddress].otpVerified = true; 
+    }
+
+    function setCandidateFace(address _ethereumAddress) public {
+        
+        candidateInfo[_ethereumAddress].faceRegistered = true; 
+        candidateInfo[_ethereumAddress].fullyRegistered = true;
     }
 
     // Function to register a voter with a hashed password
@@ -190,10 +259,9 @@ contract Election {
         string memory _email,
         string memory _mobileNumber,
         string memory _voterId,
-        string memory _ipfsImageHash,
         string memory _password // Accept the plain password
     ) public {
-        require(!voters[_ethereumAddress].isRegistered, "Voter is already registered.");
+        require(!voterInfo[_ethereumAddress].profileFilled, "Voter is already registered.");
 
         // Hash the provided password using a hashing function (e.g., keccak256)
         bytes32 passwordHash = hashPassword(_password);
@@ -203,19 +271,17 @@ contract Election {
             _name,
             _email,
             _mobileNumber,
-            _voterId,
-            _ipfsImageHash,
-            passwordHash, // Store the hashed password
-            true
+            _voterId,            
+            passwordHash // Store the hashed password
         );
         registeredVoters.push(_ethereumAddress);
+        voterInfo[_ethereumAddress].profileFilled = true;
         emit VoterRegistered(
             _name,
             _ethereumAddress,
             _email,
             _mobileNumber,
-            _voterId,
-            _ipfsImageHash
+            _voterId
         );
     }
 
@@ -226,14 +292,14 @@ contract Election {
     }
 
     function isVoterRegistered(address _ethereumAddress) public view returns (bool) {
-        return voters[_ethereumAddress].isRegistered;
+        return voterInfo[_ethereumAddress].fullyRegistered;
     }
 
 
 
     // Function to log in a voter with a password check
     function loginVoter(string memory _email, string memory _password, address _ethereumAddress) public {
-        require(voters[_ethereumAddress].isRegistered, "Voter is not registered.");
+        require(!voterInfo[_ethereumAddress].fullyRegistered, "votersVoter is not registered.");
 
         Voter memory voter = voters[_ethereumAddress];
 

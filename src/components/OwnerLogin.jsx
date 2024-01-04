@@ -29,12 +29,6 @@ function OwnerLogin({}) {
 
   const loginOwner = async (e) => {
     e.preventDefault();
-
-    // const provider = new ethers.BrowserProvider(window.ethereum);
-
-    // const signer = await provider.getSigner();
-
-    // const election = new ethers.Contract(contractAddress.contractAddress, electionContract.abi, signer);
     await window.ethereum.request({ method: "eth_requestAccounts" });
     const accounts = await window.ethereum.request({ method: "eth_accounts" });
     console.log("Accounts are: ", accounts);

@@ -11,6 +11,7 @@ import Navbar from "./Navbar";
 import * as faceapi from 'face-api.js';
 const axios = require('axios');
 const ethers=require('ethers');
+const cors = require('cors');
 
 const pinataApiKey = '24e806647d4758016711';
 const pinataApiSecret = 'c35658b3a9886f4e72e3bdd3b242aab6d4e16d7a3bb76ddebeef10b66076c3ca';
@@ -20,6 +21,9 @@ function ImageRegister() {
     const [imgSrc, setImgSrc] = useState(null);
     const selfieRef = useRef();
     const isFirstRender = useRef(true);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [disable, setDisable] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -60,6 +64,9 @@ function ImageRegister() {
       };
 
     const onSubmit = async () => {
+        setLoading(true);
+        setErrorMessage('Loading. Please Wait');
+        setDisable(true);
         try {
             const imageBuffer = Buffer.from(imgSrc.split(',')[1], 'base64');
             const blob1 = new Blob([imageBuffer], { type: 'image/jpeg' });
@@ -74,6 +81,7 @@ function ImageRegister() {
                 'Content-Type': 'multipart/form-data',
                 'pinata_api_key': pinataApiKey,
                 'pinata_secret_api_key': pinataApiSecret,
+                'Accept': 'text/plain'
             },
             });
 
@@ -88,7 +96,9 @@ function ImageRegister() {
 
             console.log(accounts[0]);
 
-            const originalHash = await election.getIpfsHash(accounts[0]);
+            let originalHash = await election.getVoterIpfsHash(accounts[0]);
+
+            originalHash = originalHash[0];
 
             console.log(originalHash);
 
@@ -121,8 +131,28 @@ function ImageRegister() {
                     // Using Euclidean distance to compare face descriptions
                         const distance = faceapi.euclideanDistance(face1.descriptor, face2.descriptor);
                         console.log(distance);
+                        if (distance < 0.5) 
+                        {
+                          navigate('/voter-dashboard');
+                        }
+                        else 
+                        {
+                          setErrorMessage('Faces does not match. Reload the page and try again.')
+                          console.log("Faces do not match. Try again.");
+                        }
+                    }
+                    else if (!face1) {
+                      setLoading(false);
+                      setErrorMessage('Face in camera is not clear. Please read the guide for more info.')
+                      console.log('Face in camera is not clear. Please read the guide for more info.');
+                    }
+                    else {
+                      setLoading(false);
+                      setErrorMessage('Error in face recognition. Reload the page and try again.')
+                      console.log('Error in face recognition. Reload the page and try again.');
                     }
                 } else {
+                  setErrorMessage('Failed to fetch image');
                   console.error('Failed to fetch image');
                 }
               } catch (error) {
@@ -138,31 +168,80 @@ function ImageRegister() {
       
 
 
-    return (
-        <div className="container">
-        {imgSrc ? (
-            <img src={imgSrc} alt="webcam" />
-        ) : (
-            <Webcam
-          height={600}
-          width={600}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-          screenshotQuality={0.8}
-        />
-        )}
-        <div className="btn-container">
-            {imgSrc ? (
-            <div>
-            <button onClick={retake}>Retake photo</button>
-            <button onClick={onSubmit}>Submit</button>
-            </div>
-            ) : (
-            <button onClick={capture}>Capture photo</button>
+      return (
+        <div>
+          <Navbar />
+          <div className="container" align="center">
+          
+          <div className="mb-3" align="center">
+      
+            {(
+              <p style={{ color: 'red', marginTop: '8px' }}>{errorMessage}</p>
             )}
+          </div>
+      
+          <div>
+            <div align="center"
+              style={{
+                border: '2px solid #ddd', // Add border style
+                inlineSize: '650px',
+                borderRadius: '8px', // Optional: Add border radius for rounded corners
+                overflow: 'hidden', // Optional: Hide overflow
+              }}
+            >
+              {imgSrc ? (
+                <img
+                  src={imgSrc}
+                  alt="webcam"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              ) : (
+                <Webcam
+                  height={600}
+                  width={600}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  screenshotQuality={0.8}
+                />
+              )}
+            </div>
+          </div>
+          <br/>
+          <div className="btn-container text-center">
+            {imgSrc ? (
+              <div>
+                <button
+                  className="btn btn-primary mr-2"
+                  onClick={retake}
+                  disabled={disable}
+                >
+                  Retake photo
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={onSubmit}
+                  disabled={disable}
+                >
+                  Submit
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={capture}
+                >
+                  Capture photo
+                </button>
+                {(
+              <p style={{ color: 'red', marginTop: '8px' }}>{errorMessage}</p>
+            )}
+              </div>
+            )}
+          </div>
         </div>
         </div>
-    );
+      );
 }
 
 export default ImageRegister;

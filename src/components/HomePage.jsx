@@ -158,7 +158,7 @@ function HomePage({}) {
                     <div className="card-body">
                       <h3 className="card-title">Admin Login</h3>
                       <p className="card-text">
-                        With supporting text below as a natural lead-in to additional content.
+                        Admin can login here using the password provided already by EC.
                       </p>
                       <Link to="/owner-login">
                         <button className="option-button btn btn-primary">Login</button>
@@ -173,7 +173,7 @@ function HomePage({}) {
                     <div className="card-body">
                       <h3 className="card-title">Voter Registration</h3>
                       <p className="card-text">
-                        With supporting text below as a natural lead-in to additional content.
+                        Voter need to register here with all his information, facial and document verification.
                       </p>
                       <Link to="/voter-registration">
                         <button className="option-button btn btn-primary">Register</button>
@@ -188,7 +188,7 @@ function HomePage({}) {
                     <div className="card-body">
                       <h3 className="card-title">Voter Login</h3>
                       <p className="card-text">
-                        With supporting text below as a natural lead-in to additional content.
+                        Voter can login to dashboard after facial recognition to vote and view results of election.
                       </p>
                       <Link to="/voter-login">
                         <button className="option-button btn btn-primary">Login</button>
@@ -203,7 +203,7 @@ function HomePage({}) {
                     <div className="card-body">
                       <h3 className="card-title">Candidate Registration</h3>
                       <p className="card-text">
-                        With supporting text below as a natural lead-in to additional content.
+                      Candidate need to register here with all information along with verifications.
                       </p>
                       <Link to="/candidate-registration">
                         <button className="option-button btn btn-primary">Register</button>

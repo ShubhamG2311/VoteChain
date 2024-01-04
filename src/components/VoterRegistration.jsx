@@ -4,10 +4,12 @@ import './css/CandidateRegistration.css'
 import electionContract from "../artifacts/contracts/Election.sol/Election.json"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { Buffer } from 'buffer';
 import contractAddress from "../contractAddress.json"
 import Navbar from "./Navbar";
 
 const ethers=require('ethers');
+const axios = require('axios');
 
 function VoterRegistration() {
 
@@ -22,7 +24,7 @@ function VoterRegistration() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginMessage, setLoginMessage] = useState("");
   const [account, setAccount] = useState(null);
-  // const [otp, setOtp] = useState(0);
+  
   let otp=0;
 
   useEffect(() => {
@@ -34,6 +36,9 @@ function VoterRegistration() {
   }, []);
 
   const navigate = useNavigate();
+
+
+
 
   const checkWalletConnection = async () => {
     if (typeof window.ethereum !== "undefined") {
@@ -112,7 +117,6 @@ function VoterRegistration() {
         email,
         mobileNumber,
         voterId,
-        ipfsImageHash,
         password
       );
       
@@ -173,10 +177,6 @@ function VoterRegistration() {
                 <div class="form-group col-md-6">
                   <label for="inputvoterid" class="form-label">Voter ID</label>
                   <input type="text" className="input-field" class="form-control" id='inputvoterid' placeholder="xxxxxxxxxxx" onChange={(e) => setVoterId(e.target.value)} required/>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="inputimagehash" class="form-label">IPFS Image Hash</label>
-                  <input type="text" className="input-field" class="form-control" id='inputimagehash' placeholder="IPFS Image Hash" onChange={(e) => setIpfsImageHash(e.target.value)} required/>
                 </div>
               <button type="submit" class="btn btn-primary" onClick={registerVoter} style={{marginLeft: "-65px"}} disabled={disable}>Register</button>
             </div>

@@ -44,7 +44,7 @@ function VoterLogin({}) {
       localStorage.setItem("ethAddress", ethAddress);
       setLoginMessage('Login successful!');
       // Navigate to the voter dashboard after successful login
-      navigate('/voter-dashboard');
+      navigate('/verify-face');
     } catch (error) {
       console.error('Error:', error);
       setLoginMessage('Login failed. Please check your credentials.');
