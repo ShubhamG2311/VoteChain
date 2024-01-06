@@ -17,28 +17,40 @@ The blockchain is an emerging, decentralized, and distributed technology that pr
 - Ethereum Blockchain: Data stored on a secure, decentralized ledger, resistant to fraud and manipulation.
 - Smart Contract: Controls voting process and data storage on the blockchain.
 - Salt Hashing: Securely stores user passwords against data leaks.
-- Manh modifiers: Secure access control for different users.
+- Many modifiers: Secure access control for different users.
 - 2-Factor Authentication (future): Facial recognition for stronger login security.
 
-### Accessibility
-- Metamask Wallet: Connects users to the Ethereum blockchain.
-- Browser-based: Accessible on any device with a web browser.
-- Multiple functionalities: Admin, voter, and candidate registration/login.
-- User-friendly interface: ReactJS framework for smooth interaction.
+### Facial recognition and Verification
 
-### Voting Process
-- Voter registration: Register with personal details and verification.
-- Candidate registration: Register with details and voter ID validation.
-- Secure voting: Cast vote through the smart contract on the blockchain.
-- Results access: View election results once declared by the admin.
+- An image of user will be captured while registering along with document. If the image is valid then it will be stored. Same image will be used to authenticate the user when he is trying to login.
+- After registering, the image and document of the user is stored on IPFS and the hash generated is stored on Ethereum Network for gas optimization.
+- We have used Face API library of ReactJS for DL models required for the facial recognition.
+- We have used principle of Euclidean Distance for comparing the similarity of the two faces.
+- We have set the threshold for the distance to 0.5 after verifying it on various faces and researching the standard value across the internet.
 
-### Admin Control
-- Open/close elections: Control election timeframe.
-- Declare results: Publish final election results.
 
-### Additional Features (working on)
-- Facial recognition: More secure login through facial verification.
-- Decentralized data storage: IPFS for storing large user data securely.
+### Document verification and OTP verification
+
+- User has to provide a valid photo id card when he is registering which will be used to verify the image captured ensuring the identity of the user.
+- We have used the facial recognition method as explained in the previous slide.
+- To ensure the authenticity of the email id, we have used OTP verification method for email id verification. 4 digit OTP will be sent on registered email which is generated randomly everytime.
+- We have used SmtpJS library to implement this feature in ReactJS and created own serve using Elastic
+
+
+### Gas optimization
+
+- Minimize on chain storage:    Offload data to decentralized storage solutions like IPFS. Only store the unique IPFS hash in the smart contract, significantly reducing gas used for storage and retrievals.
+- Prioritize Gas-Efficient Operations:  Write optimized code by prioritizing cheaper operations like reading/writing memory variables, constants, and local variables. Utilize internal function calls instead of external ones.
+- Decentralize for Security and Efficiency:  Leverage the inherent security and transparency of multiple decentralized networks (4 blockchains in our case) for storing admin, voter, and candidate data. This not only ensures data integrity but also distributes gas costs across the network.
+
+
+### Data Security
+
+- Double layer protection: Passwords and confidential data are shielded with encryption, while Keccak256 hashing with salt adds extra layers of protection.
+- Decentralized Fortress: Large data lives securely on IPFS, with only its unique hash stored in the smart contract, boosting gas efficiency and security.
+- Smart Contract safety: secure coding practices, and access control measures safeguard the smart contract against potential attacks.
+Futureproof Vigilance: Facial authentication plans leverage IPFS for data storage, upholding our unwavering commitment to data security.
+
 
 ## How to run project?
 
