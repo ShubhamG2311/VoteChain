@@ -1,4 +1,4 @@
-# Online Voting System
+# VoteChain - Secure Online Voting System based on Blockchain Technology
 
 ## Introduction
 The existing voting systems face challenges related to security, transparency, and user authentication. This project aims to address these issues by implementing a secure online voting system using blockchain technology, ensuring a tamper-resistant and transparent electoral process. We have developed a web portal using Ethereum Blockchain Technology for solving this problem. We have included different features and levels of security to ensure security, transparency and avoid any types of attacks such as Phishing attacks and Smart Contract attacks. The App is almost completely decentralized while there is only admin with centralized access to administer the election. While we have worked on user-friendly experience and UI, our main focus relies on solving the security issues that exist in few online voting system such as OmniBallot, Voatz etc.
