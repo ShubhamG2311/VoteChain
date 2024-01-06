@@ -54,6 +54,39 @@ Futureproof Vigilance: Facial authentication plans leverage IPFS for data storag
 
 ## How to run project?
 
+Steps to setup the network in metamask:
+1) Install the Metamask Extension in your chrome browser.
+2) After setting up account in Metamask, go to "Add Network" option from top left corner where current selected network is shown.
+3) Choose "Add Network Manually".
+4) Setup the other information using below settings:
+   ![image](https://github.com/ShubhamG2311/Online-Voting-System/assets/76262127/e80b82bf-b5a0-4829-944e-b9341d4a69a2)
+
+
+
+Steps to run the project:
+
+1) Clone the repository to your local computer.
+2) Install the required node packages using npm installer
+  ```
+npm install
+ ```
+3) Run the following command in the terminal to simulate the blockchain using hardhat
+```
+npx hardhat node
+```
+4) In another terminal, compile the smart contract using the below command.
+```
+npx hardhat compile
+```
+5) Run the contract on the blockchain using following command.
+```
+npx hardhat run --network localhost scripts/deploy.js
+```
+6) Start the react project
+```
+npm start
+```
+
 
 ## References and Research papers
 
