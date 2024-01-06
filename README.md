@@ -90,7 +90,16 @@ npx hardhat run --network localhost scripts/deploy.js
 npm start
 ```
 
+## Links
+
+- [Demo Video](https://youtu.be/munFS_8Nauc?si=U9_o3PMF7W1_JPPU)
+- [Presentation](https://www.canva.com/design/DAF4Vq3d6bU/86OOlFIz7ZgTJtjPcwdHzA/view?utm_content=DAF4Vq3d6bU&utm_campaign=designshare&utm_medium=link&utm_source=editor#6)
 
 ## References and Research papers
 
-
+- [Security Analysis of the Democracy Live Online Voting System](https://www.usenix.org/conference/usenixsecurity21/presentation/specter-security)
+- [The Ballot is Busted Before the Blockchain: A Security Analysis of Voatz, the First Internet Voting Application Used in U.S. Federal Elections](https://www.usenix.org/conference/usenixsecurity20/presentation/specter)
+- [The Application of the Blockchain Technology in Voting Systems: A Review](https://dl.acm.org/doi/10.1145/3439725)
+- [Blockchain-Based Voting Considered Harmful?](https://ieeexplore.ieee.org/document/9790326)
+- [ReactJS Documentation](https://legacy.reactjs.org/docs/getting-started.html)
+- [Solidity Documentation](https://docs.soliditylang.org/en/v0.8.23/)
